@@ -53,12 +53,12 @@ function! s:start()
       let jx = x * 100
       let jy = 1600
       while dy >= -40
-        call setline(jy / 100, repeat(" ", jx / 100) . "           ")
+        call setline(jy / 100,   repeat(" ", jx / 100) . "           ")
         call setline(jy / 100+1, repeat(" ", jx / 100) . "           ")
         let jx += power
         let jy -= dy
         let dy -= 1
-        call setline(jy / 100, repeat(" ", jx / 100) . "  ヽｾｲﾔｧ!ノ")
+        call setline(jy / 100,   repeat(" ", jx / 100) . "  ヽｾｲﾔｧ!ノ")
         call setline(jy / 100+1, repeat(" ", jx / 100) . "(; ﾟДﾟ)   ")
         sleep 10ms
         redraw
