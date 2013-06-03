@@ -30,7 +30,7 @@ function! s:start()
   syn match HabatobiGreen '\~'
   hi HabatobiGreen ctermfg=black ctermbg=green guifg=black guibg=green
   syn match HabatobiBar '\^'
-  hi HabatobiBar ctermfg=red ctermbg=green guifg=red guibg=green
+  hi HabatobiBar ctermfg=red ctermbg=red guifg=red guibg=red
   syn match HabatobiPower '^=.*'
   hi HabatobiPower ctermfg=red ctermbg=yellow guifg=red guibg=yellow
 
@@ -44,7 +44,7 @@ function! s:start()
   call s:cursor_on(0)
   while 1
     let c = getchar(0)
-    if c == 27
+    if c == 27 || c == 113
       break
     endif
     if state == 3
