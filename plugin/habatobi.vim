@@ -74,7 +74,7 @@ function! s:start()
         let power += 5
         let state = 1
         let x += 1
-      elseif state == 1 && c == 106
+      elseif state == 1 && c == 107
         let power += 5
         let state = 0
         let x += 1
