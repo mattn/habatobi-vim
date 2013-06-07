@@ -1,18 +1,23 @@
 scriptencoding utf-8
 
-let s:cursor = ''
-
+let s:cursor = {}
 function! s:cursor_on(f)
-  if s:cursor == ''
-    redir => s:cursor
-    silent! hi Cursor
-    redir END
-    let s:cursor = substitute(matchstr(s:cursor, 'xxx\zs.*'), "\n", ' ', 'g')
+  if empty(s:cursor)
+    for name in ['Cursor']
+      redir => colors
+      exe "silent!" "hi" name
+      redir END
+      let s:cursor[name] = substitute(matchstr(colors, 'xxx\zs.*'), "\n", ' ', 'g')
+    endfor
   endif
   if a:f
-    exe "hi Cursor ".s:cursor
+    for name in keys(s:cursor)
+      exe "hi" name s:cursor[name]
+    endfor
   else
-    hi Cursor term=NONE ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE
+    for name in keys(s:cursor)
+      exe "hi ".name." term=NONE ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE"
+    endfor
   endif
 endfunction
 
@@ -52,6 +57,7 @@ function! s:start()
       let dy = 40
       let jx = x * 100
       let jy = 1600
+      let wh = winheight(".")
       while dy >= -40
         call setline(jy / 100,   repeat(" ", jx / 100) . "           ")
         call setline(jy / 100+1, repeat(" ", jx / 100) . "           ")
@@ -60,8 +66,9 @@ function! s:start()
         let dy -= 1
         call setline(jy / 100,   repeat(" ", jx / 100) . "  ヽｾｲﾔｧ!ノ")
         call setline(jy / 100+1, repeat(" ", jx / 100) . "(; ﾟДﾟ)   ")
-        sleep 10ms
+        call setline(17, repeat(" ", jx / 100) . " ---     ")
         redraw
+        sleep 10ms
       endwhile
       call setline(16, repeat(" ", jx / 100) . "   ヽｹﾞﾌｯノ")
       call setline(17, repeat(" ", jx / 100) . "(;´Д`)   ")
