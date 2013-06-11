@@ -53,7 +53,7 @@ function! s:start()
       break
     endif
     if state == 3
-	elseif state == 2
+    elseif state == 2
       let dy = 40
       let jx = x * 100
       let jy = 1600
@@ -72,12 +72,12 @@ function! s:start()
       endwhile
       call setline(16, repeat(" ", jx / 100) . "   ヽｹﾞﾌｯノ")
       call setline(17, repeat(" ", jx / 100) . "(;´Д`)   ")
-	  echomsg "記録: " . printf("%.02fメートル", (str2float(jx)/100 - 23) / 10)
+      echomsg "記録: " . printf("%.02fメートル", (str2float(jx)/100 - 23) / 10)
       let state = 3
     else
       if c == 32
         let state = 2
-	  elseif state == 0 && c == 106
+      elseif state == 0 && c == 106
         let power += 5
         let state = 1
         let x += 1
@@ -91,7 +91,7 @@ function! s:start()
       if power < 0 | let power = 0 | endif
       if power > 50 | let power = 50 | endif
       if x > 22
-	    echomsg "ファール！"
+        echomsg "ファール！"
         let state = 4
       endif
       if state == 0
