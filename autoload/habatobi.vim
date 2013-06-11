@@ -31,6 +31,7 @@ let s:state_fault = 4
 let s:max_power = 50
 
 function! habatobi#start()
+  " open new buffer
   silent edit `='==幅飛び=='`
   setlocal buftype=nowrite
   setlocal noswapfile
@@ -48,9 +49,11 @@ function! habatobi#start()
   syn match HabatobiPower '^=.*'
   hi HabatobiPower ctermfg=red ctermbg=yellow guifg=red guibg=yellow
 
+  " clear whole screen
   for i in range(1, winheight('.'))
     call setline(i, repeat(' ', 80))
   endfor
+  " field and jump position
   call setline(18, repeat("~", 30) . '^' . repeat("~", 48))
   let power = 0
   let state = s:state_left
@@ -66,25 +69,26 @@ function! habatobi#start()
       " do nothing
     elseif state == s:state_jump
       " jumping animation
+      let rate = 100
       let dy = 40
-      let jx = x * 100
+      let jx = x * rate
       let jy = 1600
       let wh = winheight(".")
       while dy >= -40
-        call setline(jy / 100,   repeat(" ", jx / 100) . "           ")
-        call setline(jy / 100+1, repeat(" ", jx / 100) . "           ")
+        call setline(jy / rate,   repeat(" ", jx / rate) . "           ")
+        call setline(jy / rate+1, repeat(" ", jx / rate) . "           ")
         let jx += power
         let jy -= dy
         let dy -= 1
-        call setline(jy / 100,   repeat(" ", jx / 100) . "  ヽｾｲﾔｧ!ノ")
-        call setline(jy / 100+1, repeat(" ", jx / 100) . "(; ﾟДﾟ)   ")
-        call setline(17, repeat(" ", jx / 100) . " ---     ")
+        call setline(jy / rate,   repeat(" ", jx / rate) . "  ヽｾｲﾔｧ!ノ")
+        call setline(jy / rate+1, repeat(" ", jx / rate) . "(; ﾟДﾟ)   ")
+        call setline(17, repeat(" ", jx / rate) . " ---     ")
         redraw
         sleep 10ms
       endwhile
-      call setline(16, repeat(" ", jx / 100) . "   ヽｹﾞﾌｯノ")
-      call setline(17, repeat(" ", jx / 100) . "(;´Д`)   ")
-      echomsg "記録: " . printf("%.02fメートル", (str2float(jx)/100 - 23) / 10)
+      call setline(16, repeat(" ", jx / rate) . "   ヽｹﾞﾌｯノ")
+      call setline(17, repeat(" ", jx / rate) . "(;´Д`)   ")
+      echomsg "記録: " . printf("%.02fメートル", (str2float(jx)/rate - 23) / 10)
       let state = s:state_finish
     else
       if c == 32 " space key
