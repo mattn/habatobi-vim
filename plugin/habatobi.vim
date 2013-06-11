@@ -72,7 +72,7 @@ function! s:start()
       endwhile
       call setline(16, repeat(" ", jx / 100) . "   ヽｹﾞﾌｯノ")
       call setline(17, repeat(" ", jx / 100) . "(;´Д`)   ")
-	  echomsg "記録: " . printf("%.02fメートル", str2float(jx/100 - 23) / 10)
+	  echomsg "記録: " . printf("%.02fメートル", (str2float(jx)/100 - 23) / 10)
       let state = 3
     else
       if c == 32
