@@ -1,7 +1,9 @@
 scriptencoding utf-8
 
+let s:cursor_off = 0
+let s:cursor_on = 1
 let s:cursor = {}
-function! s:cursor_on(f)
+function! s:cursor_toggle(f)
   if empty(s:cursor)
     for name in ['Cursor']
       redir => colors
@@ -20,6 +22,13 @@ function! s:cursor_on(f)
     endfor
   endif
 endfunction
+
+let s:state_left = 0
+let s:state_right = 1
+let s:state_jump = 2
+let s:state_finish = 3
+let s:state_fault = 4
+let s:max_power = 50
 
 function! habatobi#start()
   silent edit `='==幅飛び=='`
@@ -44,16 +53,19 @@ function! habatobi#start()
   endfor
   call setline(18, repeat("~", 30) . '^' . repeat("~", 48))
   let power = 0
-  let state = 0
+  let state = s:state_left
   let x = 0
-  call s:cursor_on(0)
+  call s:cursor_toggle(s:cursor_off)
   while 1
     let c = getchar(0)
-    if c == 27 || c == 113
+    if c == 27 || c == 113 " esc or q
+      " quit game loop
       break
     endif
-    if state == 3
-    elseif state == 2
+    if state == s:state_finish
+      " do nothing
+    elseif state == s:state_jump
+      " jumping animation
       let dy = 40
       let jx = x * 100
       let jy = 1600
@@ -73,31 +85,31 @@ function! habatobi#start()
       call setline(16, repeat(" ", jx / 100) . "   ヽｹﾞﾌｯノ")
       call setline(17, repeat(" ", jx / 100) . "(;´Д`)   ")
       echomsg "記録: " . printf("%.02fメートル", (str2float(jx)/100 - 23) / 10)
-      let state = 3
+      let state = s:state_finish
     else
-      if c == 32
-        let state = 2
-      elseif state == 0 && c == 106
+      if c == 32 " space key
+        let state = s:state_jump
+      elseif state == s:state_left && c == 106 " j key
         let power += 5
-        let state = 1
+        let state = s:state_right
         let x += 1
-      elseif state == 1 && c == 107
+      elseif state == s:state_right && c == 107 " k key
         let power += 5
-        let state = 0
+        let state = s:state_left
         let x += 1
       else
         let power -= 1
       endif
       if power < 0 | let power = 0 | endif
-      if power > 50 | let power = 50 | endif
+      if power > s:max_power | let power = s:max_power | endif
       if x > 22
         echomsg "ファール！"
-        let state = 4
+        let state = s:state_fault
       endif
-      if state == 0
+      if state == s:state_left
         call setline(16, repeat(" ", x) . "     !!ﾊｧﾊｧ")
         call setline(17, repeat(" ", x) . "<(;´Д`)v ")
-      elseif state == 1
+      elseif state == s:state_right
         call setline(16, repeat(" ", x) . "     ﾊｧﾊｧ!!")
         call setline(17, repeat(" ", x) . "L(|´д`)V ")
       endif
@@ -106,6 +118,6 @@ function! habatobi#start()
     sleep 50ms
     redraw
   endwhile
-  call s:cursor_on(1)
+  call s:cursor_toggle(s:cursor_on)
   bdelete
 endfunction
