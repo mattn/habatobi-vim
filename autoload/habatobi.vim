@@ -51,7 +51,7 @@ function! habatobi#start()
 
   " clear whole screen
   for i in range(1, winheight('.'))
-    call setline(i, repeat(' ', 80))
+    call setline(i, repeat(' ', winwidth('.')))
   endfor
   " field and jump position
   call setline(18, repeat("~", 30) . '^' . repeat("~", 48))
@@ -83,8 +83,8 @@ function! habatobi#start()
         call setline(jy / rate,   repeat(" ", jx / rate) . "  ヽｾｲﾔｧ!ノ")
         call setline(jy / rate+1, repeat(" ", jx / rate) . "(; ﾟДﾟ)   ")
         call setline(17, repeat(" ", jx / rate) . " ---     ")
-        redraw
         sleep 10ms
+        redraw
       endwhile
       call setline(16, repeat(" ", jx / rate) . "   ヽｹﾞﾌｯノ")
       call setline(17, repeat(" ", jx / rate) . "(;´Д`)   ")
